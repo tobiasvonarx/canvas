@@ -1,0 +1,17 @@
+{
+  "name": "canvas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-packager . canvas --ignore-node_modules/electron-*"
+  },
+  "author": "Tobias von Arx",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^4.0.3",
+    "electron-packager": "^13.0.1"
+  },
+  "dependencies": {}
+}
