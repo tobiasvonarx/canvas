@@ -1,13 +1,37 @@
 // TODO:
-// zooming
 // more file types (text)
 
-const { clipboard } = require('electron');
+const {
+  clipboard
+} = require('electron');
 const nativeImage = require('electron').nativeImage;
+
+let offsetX = 0;
+let offsetY = 0;
+let offsetIncrement = 5;
+let offsetLimit = 10000;
+
+let sclFactor = 1;
+let scaleDelta = 1.02;
+let scaleOffsetX;
+let scaleOffsetY;
+
+
+let pics = [];
+let raw_pics = [];
+let pMouseX;
+let pMouseY;
+let selectedPic;
+let picSelected = false;
+let mouseDown;
 
 function setup() {
   const canvas = createCanvas(windowWidth, windowHeight);
   background(51);
+
+  scaleOffsetX = -width / 2;
+  scaleOffsetY = -height / 2;
+
   noFill();
 
   frameRate(60);
@@ -18,33 +42,34 @@ function setup() {
   canvas.drop(gotFile);
 }
 
-let offsetX = 0;
-let offsetY = 0;
-let offsetIncrement = 5;
-let offsetLimit = 10000;
 
-let pics = [];
-let raw_pics = [];
-let pmx;
-let pmy;
-let ppicx;
-let ppicy;
-let selectedPic;
-let picSelected = false;
+
 
 function draw() {
   background(51);
 
-  pan();
+  // workaround to zoom in on the center
+  translate(width / 2, height / 2);
 
-  findPicFromCoords(mouseX, mouseY);
+  zoom();
+  pan();
 
   drawPics();
 
-  if (picSelected && mouseIsPressed) {
+
+  findPicFromCoords(mouseX, mouseY);
+
+  if (picSelected && mouseDown) {
     let pic = pics[selectedPic];
-    pic.x = ppicx + (mouseX - pmx);
-    pic.y = ppicy + (mouseY - pmy);
+
+    let mx = (mouseX + scaleOffsetX) / sclFactor + offsetX;
+    let my = (mouseY + scaleOffsetY) / sclFactor + offsetY;
+
+    pic.x += mx - pMouseX;
+    pic.y += my - pMouseY;
+
+    pMouseX = mx;
+    pMouseY = my;
 
     drawBorder(pic.x, pic.y, pic.width, pic.height, 229, 69, 69);
   } else if (picSelected) {
@@ -52,16 +77,17 @@ function draw() {
     drawBorder(pic.x, pic.y, pic.width, pic.height, 76, 23, 23);
   }
 
+  strokeWeight(1);
   stroke('rgba(204,204,204,0.05)');
-  for (let h = -offsetLimit; h < offsetLimit+windowHeight; h+= 50) {
-    line(-offsetLimit, h, offsetLimit+windowWidth, h);
+  for (let h = -offsetLimit; h < offsetLimit + windowHeight; h += 50) {
+    line(-offsetLimit, h, offsetLimit + windowWidth, h);
   }
-  for (let w = -offsetLimit; w < offsetLimit+windowWidth; w+= 50) {
-    line(w, -offsetLimit, w, offsetLimit+windowHeight);
+  for (let w = -offsetLimit; w < offsetLimit + windowWidth; w += 50) {
+    line(w, -offsetLimit, w, offsetLimit + windowHeight);
   }
 }
 
-function pan () {
+function pan() {
   if (keyIsPressed) {
     if (keyIsDown(LEFT_ARROW)) {
       offsetX -= offsetIncrement;
@@ -90,9 +116,19 @@ function pan () {
     offsetY = -offsetLimit;
   }
 
-  //console.log(offsetX, offsetY);
-
   translate(-offsetX, -offsetY);
+}
+
+function zoom() {
+  if (keyIsPressed) {
+    if (keyIsDown(187)) { // +
+      sclFactor *= scaleDelta;
+    }
+    if (keyIsDown(189)) { // -
+      sclFactor /= scaleDelta;
+    }
+  }
+  scale(sclFactor)
 }
 
 function drawBorder(x, y, w, h, r, g, b) {
@@ -100,10 +136,10 @@ function drawBorder(x, y, w, h, r, g, b) {
   strokeWeight(5);
   stroke(r, g, b);
   beginShape();
-  vertex(x-w/2, y-h/2);
-  vertex(x+w/2, y-h/2);
-  vertex(x+w/2, y+h/2);
-  vertex(x-w/2, y+h/2);
+  vertex(x - w / 2, y - h / 2);
+  vertex(x + w / 2, y - h / 2);
+  vertex(x + w / 2, y + h / 2);
+  vertex(x - w / 2, y + h / 2);
   endShape(CLOSE);
   pop();
 }
@@ -129,14 +165,13 @@ function doubleClicked() {
 
 function mousePressed() {
   findPicFromCoords(mouseX, mouseY);
-  pmx = mouseX;
-  pmy = mouseY;
-  try {
-    ppicx = pics[selectedPic].x;
-    ppicy = pics[selectedPic].y;
-  } catch {
-    //console.log('No picture selected');
+
+  if (picSelected) {
+    pMouseX = (mouseX + scaleOffsetX) / sclFactor + offsetX;
+    pMouseY = (mouseY + scaleOffsetY) / sclFactor + offsetY;
   }
+
+  mouseDown = true;
 
   if (!picSelected) {
     console.log('no pic selected');
@@ -144,27 +179,44 @@ function mousePressed() {
 }
 
 function mouseReleased() {
-    picSelected = false;
+  picSelected = false;
+  mouseDown = false;
 }
 
 function findPicFromCoords(mx, my) {
+  // stroke(255);
+  // strokeWeight(10);
+
+  let x = (mx + scaleOffsetX) / sclFactor + offsetX;
+  let y = (my + scaleOffsetY) / sclFactor + offsetY;
+
+  // point(x, y);
   picSelected = false;
   for (let i = pics.length - 1; i >= 0; i--) {
     let pic = pics[i];
 
-    let picx = pic.x - offsetX;
-    let picy = pic.y - offsetY;
+    // stroke(43, 12, 156);
 
-    //if (((mx >= pic.x) && (my >= pic.y)) && ((mx <= pic.x + pic.width) && (my <= pic.y + pic.height))) {
-    if (((mx>=picx-pic.width/2) && (my>=picy-pic.height/2))&&((mx<=picx+pic.width/2) && (my<=picy+pic.height/2))) {
+    let picx = pic.x;
+    let picy = pic.y;
+    let picw = pic.width;
+    let pich = pic.height;
+
+    // point(picx - picw / 2, picy - pich / 2);
+    // point(picx + picw / 2, picy + pich / 2);
+
+    if (((x >= picx - picw / 2) && (y >= picy - pich / 2)) && ((x <= picx + picw / 2) && (y <= picy + pich / 2))) {
       // prevent bug of selectedPic changing while mouse pressed
       if (!(mouseIsPressed && selectedPic != i)) {
         pics.push(pics.splice(i, 1)[0]);
         raw_pics.push(raw_pics.splice(i, 1)[0]);
-        selectedPic = pics.length-1;
+        selectedPic = pics.length - 1;
         picSelected = true;
         break;
       }
+
+      // stroke(255);
+      // point(pic.x, pic.y);
     }
   }
 }
@@ -214,10 +266,11 @@ function drawPics() {
 function gotFile(file) {
   if (file.type === 'image') {
     // Create an image DOM element but don't show it
+    console.log(file);
     let img = createImg(file.data).hide();
 
-    img.x = mouseX;
-    img.y = mouseY;
+    img.x = mouseX + scaleOffsetX;
+    img.y = mouseY + scaleOffsetY;
 
     pics.push(img);
     raw_pics.push(file)
