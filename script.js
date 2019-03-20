@@ -13,8 +13,8 @@ let fullscreen = false;
 
 let offsetX = 0;
 let offsetY = 0;
-let offsetIncrement = 5;
 let offsetLimit = 10000;
+let dragFactor = 0.5;
 
 let sclFactor = 1;
 let scaleDelta = 1.02;
@@ -95,19 +95,32 @@ function draw() {
 }
 
 function pan() {
-	if (keyIsPressed) {
-		if (keyIsDown(LEFT_ARROW)) {
-			offsetX -= offsetIncrement / sclFactor;
-		}
-		if (keyIsDown(RIGHT_ARROW)) {
-			offsetX += offsetIncrement / sclFactor;
-		}
-		if (keyIsDown(UP_ARROW)) {
-			offsetY -= offsetIncrement / sclFactor;
-		}
-		if (keyIsDown(DOWN_ARROW)) {
-			offsetY += offsetIncrement / sclFactor;
-		}
+	// if (keyIsPressed) {
+	// 	if (keyIsDown(LEFT_ARROW)) {
+	// 		offsetX -= offsetIncrement / sclFactor;
+	// 	}
+	// 	if (keyIsDown(RIGHT_ARROW)) {
+	// 		offsetX += offsetIncrement / sclFactor;
+	// 	}
+	// 	if (keyIsDown(UP_ARROW)) {
+	// 		offsetY -= offsetIncrement / sclFactor;
+	// 	}
+	// 	if (keyIsDown(DOWN_ARROW)) {
+	// 		offsetY += offsetIncrement / sclFactor;
+	// 	}
+	// }
+	//
+
+	let mx = (mouseX + scaleOffsetX) / sclFactor + offsetX;
+	let my = (mouseY + scaleOffsetY) / sclFactor + offsetY;
+
+	if (!picSelected && mouseDown) {
+
+		offsetX -= (mx - pMouseX) * dragFactor * Math.log(sclFactor - 1 + Math.E);
+		offsetY -= (my - pMouseY) * dragFactor * Math.log(sclFactor - 1 + Math.E);
+
+		pMouseX = mx;
+		pMouseY = my;
 	}
 
 	if (offsetX > offsetLimit) {
@@ -165,16 +178,14 @@ function doubleClicked() {
 function mousePressed() {
 	findPicFromCoords(mouseX, mouseY);
 
-	if (picSelected) {
-		pMouseX = (mouseX + scaleOffsetX) / sclFactor + offsetX;
-		pMouseY = (mouseY + scaleOffsetY) / sclFactor + offsetY;
-	}
+	pMouseX = (mouseX + scaleOffsetX) / sclFactor + offsetX;
+	pMouseY = (mouseY + scaleOffsetY) / sclFactor + offsetY;
 
 	mouseDown = true;
 
-	if (!picSelected) {
-		console.log('no pic selected');
-	}
+	// if (!picSelected) {
+	// 	console.log('no pic selected');
+	// }
 }
 
 function mouseReleased() {
@@ -193,13 +204,13 @@ function mouseWheel(event) {
 }
 
 function findPicFromCoords(mx, my) {
-	stroke(255);
-	strokeWeight(8 / sclFactor);
+	// stroke(255);
+	// strokeWeight(8 / sclFactor);
 
 	let x = (mx + scaleOffsetX) / sclFactor + offsetX;
 	let y = (my + scaleOffsetY) / sclFactor + offsetY;
 
-	point(x, y);
+	// point(x, y);
 	picSelected = false;
 	for (let i = pics.length - 1; i >= 0; i--) {
 		let pic = pics[i];
