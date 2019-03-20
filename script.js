@@ -14,10 +14,10 @@ let fullscreen = false;
 let offsetX = 0;
 let offsetY = 0;
 let offsetLimit = 10000;
-let dragFactor = 0.5;
+let dragFactor = 0.55;
 
 let sclFactor = 1;
-let scaleDelta = 1.02;
+let scaleDelta = 1.01;
 let scaleOffsetX;
 let scaleOffsetY;
 
