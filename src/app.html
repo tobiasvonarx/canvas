@@ -4,6 +4,13 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Canvas</title>
+		<script>
+			(function() {
+				var t = localStorage.getItem('canvas-theme');
+				if (t === 'light') return;
+				document.documentElement.classList.add('dark');
+			})();
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

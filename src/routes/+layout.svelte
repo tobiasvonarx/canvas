@@ -1,40 +1,11 @@
 <script lang="ts">
 	import '../app.css';
-	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
-	import { registerBuiltinWidgets } from '$lib/widgets/index';
-	import { loadFromDB, startPersistence } from '$lib/persistence';
+	import { theme } from '$lib/stores/theme';
 
 	let { children } = $props();
-	let ready = $state(false);
 
-	onMount(async () => {
-		registerBuiltinWidgets();
-		await loadFromDB();
-		startPersistence();
-		ready = true;
-	});
+	// Subscribe to ensure theme store initializes and applies .dark class
+	$effect(() => { $theme; });
 </script>
 
-<svelte:head>
-	<title>Canvas</title>
-</svelte:head>
-
-{#if ready}
-	{@render children()}
-{:else}
-	<div class="loading">
-		<span>Loading Canvas...</span>
-	</div>
-{/if}
-
-<style>
-	.loading {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 100vh;
-		color: var(--color-text-secondary);
-		font-size: 14px;
-	}
-</style>
+{@render children()}

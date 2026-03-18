@@ -43,16 +43,23 @@ export function registerBuiltinWidgets() {
 	registerWidget({
 		type: 'lunch-menu',
 		name: 'Lunch Menu',
-		description: 'Shows the daily lunch menu for a cantine',
+		description: 'Fetches and shows the daily lunch menu from any canteen page',
 		icon: 'UtensilsCrossed',
-		defaultSize: { width: 280, height: 280 },
+		defaultSize: { width: 280, height: 320 },
 		configSchema: [
 			{
-				key: 'source',
-				label: 'Cantine name',
+				key: 'name',
+				label: 'Canteen name',
 				type: 'text',
-				default: 'West Hub Cambridge',
-				placeholder: 'e.g. West Hub Cambridge'
+				default: 'Canteen',
+				placeholder: 'e.g. West Hub, Mensa'
+			},
+			{
+				key: 'menuUrl',
+				label: 'Menu page URL',
+				type: 'url',
+				default: '',
+				placeholder: 'https://example.com/lunch-menu'
 			}
 		],
 		component: LunchMenuWidget,

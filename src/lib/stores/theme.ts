@@ -3,8 +3,7 @@ import { browser } from '$app/environment';
 
 function createThemeStore() {
 	const stored = browser ? localStorage.getItem('canvas-theme') : null;
-	const prefersDark = browser ? window.matchMedia('(prefers-color-scheme: dark)').matches : false;
-	const initial = stored ? stored === 'dark' : prefersDark;
+	const initial = stored ? stored === 'dark' : true;
 
 	const { subscribe, set, update } = writable<'light' | 'dark'>(initial ? 'dark' : 'light');
 

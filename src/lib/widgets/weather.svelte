@@ -27,10 +27,11 @@
 		error = '';
 		try {
 			const res = await fetch(
-				`https://wttr.in/${encodeURIComponent(location)}?format=j1`
+				`/api/weather?location=${encodeURIComponent(location)}`
 			);
 			if (!res.ok) throw new Error('Failed to fetch weather');
-			const data = await res.json();
+			const raw = await res.json();
+			const data = raw.data || raw;
 			const current = data.current_condition[0];
 			weather = {
 				temp: parseInt(current.temp_C),
