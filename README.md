@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/tobiasvonarx/canvas/main/static/og-image.svg" alt="Canvas" width="120" />
+  <img src="https://raw.githubusercontent.com/tobiasvonarx/canvas/main/static/canvas_logo_transparent.png" alt="Canvas" width="120" />
 </p>
 
 <h1 align="center">Canvas</h1>

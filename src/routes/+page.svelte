@@ -44,7 +44,7 @@
 <div class="landing" class:visible>
 	<!-- Nav -->
 	<nav>
-		<div class="nav-brand">Canvas</div>
+		<div class="nav-brand"><img src="/canvas_logo_transparent.png" alt="Canvas" class="nav-logo" />Canvas</div>
 		<div class="nav-links">
 			<a href="https://github.com/tobiasvonarx/canvas" target="_blank" rel="noopener">GitHub</a>
 			<button class="theme-toggle" onclick={() => theme.toggle()} aria-label="Toggle theme">
@@ -189,10 +189,22 @@
 	}
 
 	.nav-brand {
+		display: flex;
+		align-items: center;
+		gap: 8px;
 		font-size: 15px;
 		font-weight: 600;
 		color: var(--color-text);
 		letter-spacing: 0.5px;
+	}
+
+	.nav-logo {
+		width: 22px;
+		height: 22px;
+	}
+
+	:global(.dark) .nav-logo {
+		filter: invert(1);
 	}
 
 	.nav-links {
