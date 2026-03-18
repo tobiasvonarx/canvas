@@ -1,0 +1,91 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+	--color-bg: #fafafa;
+	--color-bg-secondary: #f4f4f5;
+	--color-bg-tertiary: #e4e4e7;
+	--color-surface: #ffffff;
+	--color-surface-hover: #f4f4f5;
+	--color-border: #e4e4e7;
+	--color-border-strong: #d4d4d8;
+	--color-text: #18181b;
+	--color-text-secondary: #71717a;
+	--color-text-tertiary: #a1a1aa;
+	--color-accent: #3b82f6;
+	--color-accent-hover: #2563eb;
+	--color-danger: #ef4444;
+	--color-note-yellow: #fef9c3;
+	--color-note-blue: #dbeafe;
+	--color-note-green: #dcfce7;
+	--color-note-pink: #fce7f3;
+	--color-note-purple: #f3e8ff;
+	--color-grid-dot: rgba(0, 0, 0, 0.08);
+	--color-shadow: rgba(0, 0, 0, 0.06);
+}
+
+.dark {
+	--color-bg: #09090b;
+	--color-bg-secondary: #18181b;
+	--color-bg-tertiary: #27272a;
+	--color-surface: #18181b;
+	--color-surface-hover: #27272a;
+	--color-border: #27272a;
+	--color-border-strong: #3f3f46;
+	--color-text: #fafafa;
+	--color-text-secondary: #a1a1aa;
+	--color-text-tertiary: #71717a;
+	--color-accent: #60a5fa;
+	--color-accent-hover: #3b82f6;
+	--color-danger: #f87171;
+	--color-note-yellow: #78350f;
+	--color-note-blue: #1e3a5f;
+	--color-note-green: #14532d;
+	--color-note-pink: #831843;
+	--color-note-purple: #581c87;
+	--color-grid-dot: rgba(255, 255, 255, 0.06);
+	--color-shadow: rgba(0, 0, 0, 0.3);
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html, body {
+	height: 100%;
+	overflow: hidden;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+	background: var(--color-bg);
+	color: var(--color-text);
+	font-size: 14px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+}
+
+::selection {
+	background: var(--color-accent);
+	color: white;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--color-border-strong);
+	border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--color-text-tertiary);
+}

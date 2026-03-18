@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "Bash(pnpm create:*)",
+      "Bash(npm --version)",
+      "Bash(npm install:*)",
+      "Bash(1:*)",
+      "Bash(npx sv:*)",
+      "Read(//private/tmp/**)",
+      "Bash(rm -rf canvas-temp)",
+      "Bash(npx -y sv@latest create canvas-temp --template minimal --types ts --no-install --no-add-ons)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(pnpm config:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(pnpm build:*)",
+      "WebSearch",
+      "WebFetch(domain:openrouter.ai)",
+      "Bash(gh api:*)",
+      "Bash(curl -s https://api.github.com/repos/tobiasvonarx/canvas)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d[''''default_branch'''']\\)\")",
+      "Bash(git init:*)",
+      "Bash(git remote:*)",
+      "Bash(git fetch:*)"
+    ]
+  }
+}
